@@ -1,34 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Status from './components/Status'
+import BlogList from './components/BlogList'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
+
+import blogService from './services/blogs'
+
+const App = () => {
+  const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState('')
+
+  const [notification, setNotification] = useState(null)
+
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs )
+    )
+  }, [])
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem('loggedBloglistUser')
+
+    if (loggedUser !== 'null' && loggedUser !== null) {
+      const user = JSON.parse(loggedUser)
+      blogService.setToken(user.token)
+      setUser(user)
+    }
+  }, [])
+
+  const notify = (message, type) => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 4000)
+  }
+
+  const addBlog = async (blogToAdd) => {
+    try {
+      const receivedBlog = await blogService.create(blogToAdd)
+      const newBlog = { ...receivedBlog, user }
+
+      setBlogs(blogs.concat(newBlog))
+      notify(`a new blog ${newBlog.title} by ${newBlog.author} added`)
+
+    } catch({ response }) {
+      console.log(response.data)
+      notify(response.data.error, 'error')
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <Notification notification={notification} />
+
+      {!user &&
+        <LoginForm
+          setUser={setUser}
+          notify={notify}
+        />
+      }
+
+      {user &&
+        <div>
+          <Status
+            user={user}
+            setUser={setUser}
+          />
+
+          <Togglable buttonLabel='create new blog'>
+            <BlogForm
+              addBlog={addBlog}
+            />
+          </Togglable>
+        </div>
+      }
+
+
+      <BlogList
+        blogs={blogs}
+        setBlogs={setBlogs}
+        user={user}
+        setUser={setUser}
+        notify={notify}
+      />
+
+    </div>
   )
 }
 
