@@ -10,18 +10,15 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 import { useDispatch } from 'react-redux'
-import { notify, resetNotification } from './reducers/notifReducer'
+import { notify } from './reducers/notifReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState('')
 
   const dispatch = useDispatch()
-
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -36,20 +33,11 @@ const App = () => {
 
   const addBlog = async (blogToAdd) => {
     try {
-      const receivedBlog = await blogService.create(blogToAdd)
-      const newBlog = { ...receivedBlog, user }
-
-      setBlogs(blogs.concat(newBlog))
+      const newBlog = await dispatch(createBlog(blogToAdd, user))
       dispatch(notify(`a new blog ${newBlog.title} by ${newBlog.author} added`))
-      setTimeout(() => {
-        dispatch(resetNotification())
-      }, 4000)
-    } catch({ response }) {
-      console.log(response.data)
-      dispatch(notify(response.data.error, 'error'))
-      setTimeout(() => {
-        dispatch(resetNotification())
-      }, 4000)
+
+    } catch({ message }) {
+      dispatch(notify(message, 'error'))
     }
   }
 
@@ -80,10 +68,9 @@ const App = () => {
 
 
       <BlogList
-        blogs={blogs}
-        setBlogs={setBlogs}
         user={user}
         setUser={setUser}
+        addBlog={addBlog}
       />
 
     </div>

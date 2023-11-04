@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
-  const notification = useSelector(state => state)
+  const notification = useSelector(state => state.notif)
 
   const defaultStyle = {
     color: 'green',
@@ -30,8 +30,6 @@ const Notification = () => {
       return defaultStyle
     }
   }
-
-  console.log(notification)
 
   if (!notification) return null
   return (

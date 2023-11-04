@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
 import { useDispatch } from 'react-redux'
-import { notify, resetNotification } from '../reducers/notifReducer'
+import { deleteBlog, updateBlog } from '../reducers/blogReducer'
+import { notify } from '../reducers/notifReducer'
 
-const Blog = ({ blog, user, updateBlogs, deleteBlog }) => {
+const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false)
 
   const dispatch = useDispatch()
@@ -24,30 +24,29 @@ const Blog = ({ blog, user, updateBlogs, deleteBlog }) => {
   }
 
   const addLike = async () => {
-    const blogUpdate = { ...blog,
+    const blogUpdate = {
+      ...blog,
       likes: blog.likes + 1
     }
 
-    updateBlogs(blogUpdate)
+    try {
+      await dispatch(updateBlog(blogUpdate))
+    } catch({ message }) {
+      console.log(message)
+      dispatch(notify(message, 'error'))
+    }
+    
   }
-
 
   const removeBlog = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
-        await blogService.remove(blog.id)
-        deleteBlog(blog)
+        await dispatch(deleteBlog(blog.id))
         dispatch(notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'error'))
-        setTimeout(() => {
-          dispatch(resetNotification())
-        }, 4000)
 
-      } catch({ response }) {
-        console.log(response.data)
-        dispatch(notify(response.data.error, 'error'))
-        setTimeout(() => {
-          dispatch(resetNotification())
-        }, 4000)
+      } catch({ message }) {
+        console.log(message)
+        dispatch(notify(message, 'error'))
       }
     }
   }

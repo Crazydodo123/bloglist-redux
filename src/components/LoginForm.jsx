@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-import { notify, resetNotification } from '../reducers/notifReducer'
+import { useDispatch } from 'react-redux'
+import { notify } from '../reducers/notifReducer'
 
 
 const LoginForm = ({
@@ -36,9 +36,6 @@ const LoginForm = ({
       console.log(response.data)
       setPassword('')
       dispatch(notify('wrong username or password', 'error'))
-      setTimeout(() => {
-        dispatch(resetNotification())
-      }, 4000)
     }
 
   }

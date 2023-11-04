@@ -1,28 +1,29 @@
-const notifReducer = (state = null, action) => {
-  switch (action.type) {
-    case 'SET_NOTIF':
-      return { ...action.payload }
-    case 'RESET':
-      return null
-    default:
-      return state
-  }
-}
+import { createSlice } from '@reduxjs/toolkit'
 
-export const notify = (message, type) => {
-  return {
-    type: 'SET_NOTIF',
-    payload: {
-      message,
-      type,
+const notifReducer = createSlice({
+  name: 'notif',
+  initialState: null,
+  reducers: {
+    setNotification(state, action) {
+      return {...action.payload}
+    },
+    resetNotification() {
+      return null
     }
   }
-}
+})
 
-export const resetNotification = () => {
-  return {
-    type: 'RESET'
+const { setNotification, resetNotification } = notifReducer.actions
+
+export const notify = (message, type, timeout = 4) => {
+  return (dispatch) => {
+    dispatch(setNotification({message, type}))
+    
+    setTimeout(() => {
+      dispatch(resetNotification())
+    }, timeout * 1000)
   }
 }
 
-export default notifReducer
+
+export default notifReducer.reducer
