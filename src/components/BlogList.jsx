@@ -2,12 +2,16 @@ import Blog from './Blog'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 
+import { useDispatch } from 'react-redux'
+import { notify, resetNotification } from '../reducers/notifReducer'
+
 const BlogList = ({
   blogs,
   setBlogs,
-  user,
-  notify
+  user
 }) => {
+
+  const dispatch = useDispatch()
 
   const updateBlogs = async (blogUpdate) => {
     try {
@@ -27,7 +31,10 @@ const BlogList = ({
     } catch(response) {
 
       console.log(response.data)
-      notify(response.data.error, 'error')
+      dispatch(notify(response.data.error, 'error'))
+      setTimeout(() => {
+        dispatch(resetNotification())
+      }, 4000)
     }
   }
 
@@ -54,7 +61,6 @@ const BlogList = ({
           blog={blog}
           updateBlogs={updateBlogs}
           deleteBlog={deleteBlog}
-          notify={notify}
         />
       )}
     </div>
@@ -65,7 +71,6 @@ const BlogList = ({
 BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
   setBlogs: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired
 }
 
 export default BlogList

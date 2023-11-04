@@ -1,8 +1,13 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, updateBlogs, deleteBlog, notify }) => {
+import { useDispatch } from 'react-redux'
+import { notify, resetNotification } from '../reducers/notifReducer'
+
+const Blog = ({ blog, user, updateBlogs, deleteBlog }) => {
   const [visible, setVisible] = useState(false)
+
+  const dispatch = useDispatch()
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
@@ -32,11 +37,17 @@ const Blog = ({ blog, user, updateBlogs, deleteBlog, notify }) => {
       try {
         await blogService.remove(blog.id)
         deleteBlog(blog)
-        notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'error')
+        dispatch(notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'error'))
+        setTimeout(() => {
+          dispatch(resetNotification())
+        }, 4000)
 
       } catch({ response }) {
         console.log(response.data)
-        notify(response.data.error, 'error')
+        dispatch(notify(response.data.error, 'error'))
+        setTimeout(() => {
+          dispatch(resetNotification())
+        }, 4000)
       }
     }
   }
