@@ -1,7 +1,6 @@
 import Blog from './Blog'
 
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useSelector } from 'react-redux'
 
 const BlogList = ({
   user
@@ -22,7 +21,6 @@ const BlogList = ({
           key={blog.id}
           user={user}
           blog={blog}
-          updateBlogs={updateBlogs}
         />
       )}
     </div>
