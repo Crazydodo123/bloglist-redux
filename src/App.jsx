@@ -6,17 +6,27 @@ import Status from './components/Status'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
+import User from './components/User'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notifReducer'
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { checkSavedUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
+
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
+
 
 const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
     dispatch(checkSavedUser())
   }, [])
 
@@ -33,7 +43,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
       <Notification />
 
       {!user &&
@@ -45,19 +55,27 @@ const App = () => {
         <div>
           <Status />
 
-          <Togglable buttonLabel='create new blog'>
-            <BlogForm
-              addBlog={addBlog}
-            />
-          </Togglable>
+          <Routes>
+            <Route path='/users/:id' element={<User />} />
+            <Route path='/users' element={<Users />} />
+            <Route path='/' element={<>
+              <Togglable buttonLabel='create new blog'>
+                <BlogForm
+                  addBlog={addBlog}
+                />
+              </Togglable>
+              <BlogList
+                addBlog={addBlog}
+              />
+            </>} />
+          </Routes>
+          
 
-          <BlogList
-            addBlog={addBlog}
-          />
+          
         </div>
       }
 
-    </div>
+    </Router>
   )
 }
 

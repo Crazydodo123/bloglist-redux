@@ -9,7 +9,8 @@ const Status = () => {
     <div>
       <h2>blogs</h2>
       {user.name} logged in
-      <button onClick={() => dispatch(logout())} id='logout-button'>
+      <br />
+      <button style={{marginBottom: 20}}onClick={() => dispatch(logout())} id='logout-button'>
         logout
       </button>
     </div>
