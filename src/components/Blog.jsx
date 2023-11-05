@@ -1,28 +1,20 @@
-import { useState } from 'react'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteBlog, updateBlog } from '../reducers/blogReducer'
 import { notify } from '../reducers/notifReducer'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = () => {
+  const id = useParams().id
+
+  const blog = useSelector(state => {
+    return state.blogs.find(blog => blog.id === id)
+  })
+
+  if (!blog) return null
+
   const user = useSelector(state => state.user)
 
   const dispatch = useDispatch()
-
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisible = () => {
-    setVisible(!visible)
-  }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
 
   const addLike = async () => {
     const blogUpdate = {
@@ -53,14 +45,9 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div style={blogStyle} className='blog'>
+    <div>
+      <h2>{blog.title} {blog.author}</h2>
       <div>
-        <span>{blog.title} {blog.author}</span>
-        <button onClick={toggleVisible}>
-          {visible ? 'hide' : 'view'}
-        </button>
-      </div>
-      <div style={showWhenVisible} className='description'>
         {blog.url} <br />
         {blog.likes} <button onClick={addLike}>like</button> <br />
         {blog.user.name} <br />

@@ -6,14 +6,12 @@ const Status = () => {
   const user = useSelector(state => state.user)
 
   return (
-    <div>
-      <h2>blogs</h2>
+    <>
       {user.name} logged in
-      <br />
       <button style={{marginBottom: 20}}onClick={() => dispatch(logout())} id='logout-button'>
         logout
       </button>
-    </div>
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import Status from './components/Status'
 import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
+import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import User from './components/User'
@@ -19,6 +20,7 @@ import {
   BrowserRouter as Router,
   Routes, Route, Link
 } from 'react-router-dom'
+
 
 
 const App = () => {
@@ -53,11 +55,18 @@ const App = () => {
 
       {user &&
         <div>
-          <Status />
+          <div>
+            <Link to='/'>blogs</Link>
+            <Link to='/users'>users</Link>
+            <Status />
+          </div>
+
+          <h2>blogs</h2>
 
           <Routes>
             <Route path='/users/:id' element={<User />} />
             <Route path='/users' element={<Users />} />
+            <Route path='/blogs/:id' element={<Blog />} />
             <Route path='/' element={<>
               <Togglable buttonLabel='create new blog'>
                 <BlogForm
