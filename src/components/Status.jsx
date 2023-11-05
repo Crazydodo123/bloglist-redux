@@ -1,22 +1,15 @@
-const Status = ({
-  user,
-  setUser
-}) => {
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../reducers/userReducer'
 
-  const logout = () => {
-    window.localStorage.setItem(
-      'loggedBloglistUser', null
-    )
-    setUser(null)
-  }
-
-  if (!user) return null
+const Status = () => {
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
 
   return (
     <div>
       <h2>blogs</h2>
       {user.name} logged in
-      <button onClick={logout} id='logout-button'>
+      <button onClick={() => dispatch(logout())} id='logout-button'>
         logout
       </button>
     </div>

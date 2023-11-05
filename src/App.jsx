@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -7,29 +7,20 @@ import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
-import blogService from './services/blogs'
-
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notifReducer'
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { checkSavedUser } from './reducers/userReducer'
 
 const App = () => {
-  const [user, setUser] = useState('')
-
   const dispatch = useDispatch()
+
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(checkSavedUser())
   }, [])
 
-  useEffect(() => {
-    const loggedUser = window.localStorage.getItem('loggedBloglistUser')
-
-    if (loggedUser !== 'null' && loggedUser !== null) {
-      const user = JSON.parse(loggedUser)
-      blogService.setToken(user.token)
-      setUser(user)
-    }
-  }, [])
+  const user = useSelector(state => state.user)
 
   const addBlog = async (blogToAdd) => {
     try {
@@ -47,31 +38,24 @@ const App = () => {
 
       {!user &&
         <LoginForm
-          setUser={setUser}
         />
       }
 
       {user &&
         <div>
-          <Status
-            user={user}
-            setUser={setUser}
-          />
+          <Status />
 
           <Togglable buttonLabel='create new blog'>
             <BlogForm
               addBlog={addBlog}
             />
           </Togglable>
+
+          <BlogList
+            addBlog={addBlog}
+          />
         </div>
       }
-
-
-      <BlogList
-        user={user}
-        setUser={setUser}
-        addBlog={addBlog}
-      />
 
     </div>
   )
