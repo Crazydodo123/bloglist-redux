@@ -23,7 +23,7 @@ const Blog = () => {
     }
 
     try {
-      await dispatch(updateBlog(blogUpdate))
+      dispatch(updateBlog(blogUpdate))
     } catch({ message }) {
       console.log(message)
       dispatch(notify(message, 'error'))
@@ -31,10 +31,26 @@ const Blog = () => {
     
   }
 
+  const addComment = async (e) => {
+    e.preventDefault()
+    const blogUpdate = {
+      ...blog,
+      comments: blog.comments.concat(e.target[0].value)
+    }
+
+    try {
+      dispatch(updateBlog(blogUpdate))
+      e.target[0].value = ''
+    } catch({ message }) {
+      console.log(message)
+      dispatch(notify(message, 'error'))
+    }
+  }
+
   const removeBlog = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
-        await dispatch(deleteBlog(blog.id))
+        dispatch(deleteBlog(blog.id))
         dispatch(notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'error'))
 
       } catch({ message }) {
@@ -43,7 +59,6 @@ const Blog = () => {
       }
     }
   }
-  console.log(blog.comments)
 
   return (
     <div>
@@ -57,6 +72,9 @@ const Blog = () => {
         }
       </div>
       <h3>comments</h3>
+      <form onSubmit={addComment}>
+        <input></input><button type='submit'>add comment</button>
+      </form>
       <ul>
         {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
       </ul>
