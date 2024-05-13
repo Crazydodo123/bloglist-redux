@@ -1,0 +1,16 @@
+#comments-header { 
+  margin-top: 30px;
+}
+
+.small-button {
+  padding: 0px 6px;
+}
+
+#comment-input {
+  padding: 0px 2px;
+  margin-bottom: 16px;
+}
+
+ul {
+  padding-left: 20px;
+}

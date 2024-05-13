@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import './blogform.css'
+
 const BlogForm = ({ addBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -20,7 +22,7 @@ const BlogForm = ({ addBlog }) => {
     <div>
       <h2>create new</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id='blog-form'>
         <label htmlFor='title'>title: </label>
         <input
           type='text'
@@ -29,7 +31,6 @@ const BlogForm = ({ addBlog }) => {
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
-        <br />
         <label htmlFor='author'>author: </label>
         <input
           type='text'
@@ -38,7 +39,6 @@ const BlogForm = ({ addBlog }) => {
           value={author}
           onChange={({ target }) => setAuthor(target.value)}
         />
-        <br />
         <label htmlFor='url'>url: </label>
         <input
           type='text'
@@ -47,7 +47,6 @@ const BlogForm = ({ addBlog }) => {
           value={url}
           onChange={({ target }) => setUrl(target.value)}
         />
-        <br />
         <button type='submit' id='create-button'>create</button>
       </form>
 

@@ -22,7 +22,7 @@ const LoginForm = () => {
     } catch ({ response }) {
       console.log(response.data)
       setPassword('')
-      dispatch(notify('wrong username or password', 'error'))
+      dispatch(notify('wrong username or password', 'danger'))
     }
 
   }

@@ -1,0 +1,27 @@
+body {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 2vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+
+#navbar {
+  width: 90%;
+  font-size: 1.1rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+#navbar > * > * {
+  margin: 0 10px;
+  padding: 0 10px;
+}

@@ -10,6 +10,8 @@ import Togglable from './components/Togglable'
 import Users from './components/Users'
 import User from './components/User'
 
+import './app.css'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notifReducer'
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
@@ -37,10 +39,10 @@ const App = () => {
   const addBlog = async (blogToAdd) => {
     try {
       const newBlog = await dispatch(createBlog(blogToAdd, user))
-      dispatch(notify(`a new blog ${newBlog.title} by ${newBlog.author} added`))
+      dispatch(notify(`a new blog ${newBlog.title} by ${newBlog.author} added`, 'success'))
 
     } catch({ message }) {
-      dispatch(notify(message, 'error'))
+      dispatch(notify(message, 'danger'))
     }
   }
 
@@ -55,13 +57,17 @@ const App = () => {
 
       {user &&
         <div>
-          <div>
-            <Link to='/'>blogs</Link>
-            <Link to='/users'>users</Link>
-            <Status />
+          <div id='navbar'>
+            <div id='navbar-left-elements'>
+              <Link to='/'>blogs</Link>
+              <Link to='/users'>users</Link>
+            </div>
+            <div id='navbar-right-elements'>
+              <Status />
+            </div>
           </div>
 
-          <h2>blogs</h2>
+          <h1>blogs</h1>
 
           <Routes>
             <Route path='/users/:id' element={<User />} />

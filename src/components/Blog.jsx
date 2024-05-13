@@ -1,10 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteBlog, updateBlog } from '../reducers/blogReducer'
 import { notify } from '../reducers/notifReducer'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import './blog.css'
 
 const Blog = () => {
   const id = useParams().id
+  const navigate = useNavigate()
 
   const blog = useSelector(state => {
     return state.blogs.find(blog => blog.id === id)
@@ -26,7 +29,7 @@ const Blog = () => {
       dispatch(updateBlog(blogUpdate))
     } catch({ message }) {
       console.log(message)
-      dispatch(notify(message, 'error'))
+      dispatch(notify(message, 'danger'))
     }
     
   }
@@ -43,7 +46,7 @@ const Blog = () => {
       e.target[0].value = ''
     } catch({ message }) {
       console.log(message)
-      dispatch(notify(message, 'error'))
+      dispatch(notify(message, 'danger'))
     }
   }
 
@@ -51,29 +54,29 @@ const Blog = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       try {
         dispatch(deleteBlog(blog.id))
-        dispatch(notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'error'))
-
+        dispatch(notify(`the blog ${blog.title} by ${blog.author} was deleted`, 'danger'))
+        navigate('/')
       } catch({ message }) {
         console.log(message)
-        dispatch(notify(message, 'error'))
+        dispatch(notify(message, 'danger'))
       }
     }
   }
 
   return (
     <div>
-      <h2>{blog.title} {blog.author}</h2>
+      <h2>{blog.title} by {blog.author}</h2>
       <div>
-        {blog.url} <br />
-        {blog.likes} <button onClick={addLike}>like</button> <br />
-        {blog.user.name} <br />
+        Link: <a href={blog.url} target='_blank'>{blog.url}</a> <br />
+        Likes: {blog.likes} <button className='small-button' onClick={addLike}>like</button> <br />
+        User: {blog.user.name} <br />
         {user.username === blog.user.username &&
-          <button onClick={removeBlog} id='remove-button'>remove</button>
+          <button className='small-button' onClick={removeBlog} id='remove-button'>remove</button>
         }
       </div>
-      <h3>comments</h3>
+      <h3 id='comments-header'>comments</h3>
       <form onSubmit={addComment}>
-        <input></input><button type='submit'>add comment</button>
+        <input id='comment-input'></input> <button className='small-button' type='submit'>add comment</button>
       </form>
       <ul>
         {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
