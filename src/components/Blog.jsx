@@ -43,6 +43,7 @@ const Blog = () => {
       }
     }
   }
+  console.log(blog.comments)
 
   return (
     <div>
@@ -55,6 +56,10 @@ const Blog = () => {
           <button onClick={removeBlog} id='remove-button'>remove</button>
         }
       </div>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
+      </ul>
     </div>
   )
 }
